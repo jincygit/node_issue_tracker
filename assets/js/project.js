@@ -16,6 +16,13 @@
                     let newPost = newProjectDom(data.data.project);
                     $('#projects-list-container').prepend(newPost);
 
+
+                    //remove old values from input
+                    document.getElementById('projectName').value="";
+                    document.getElementById('projectAuthor').value="";
+                    document.getElementById('projectDesc').value="";
+
+
                     new Noty({
                         theme: 'relax',
                         text: "Project published!",
@@ -37,11 +44,13 @@
     let newProjectDom = function(project){
         return $(`<div class="col-lg-4 border-start custom-border" id="post-${project._id}">
         <div class="post-entry-1">
-            <a href=""><img src="/images/post-landscape-5.jpg" alt="" class="img-fluid" style="height: 83px;width: 100%;"></a>
+            <a href="details/${project._id}"><img src="/images/post-landscape-5.jpg" alt="" class="img-fluid" style="height: 83px;width: 100%;"></a>
             <div class="post-meta"><span>${project.author}</span></div>
-            <h2><a href="">${project.name}</a></h2>
+            <h2><a href="details/${project._id}">${project.name}</a></h2>
             <div class="form-group" style="margin: 0px 0px 14px 0px;">
-                <input type="submit" name="btnSubmit" class="btnContact" value="View Details" />
+                <a href="details/${project._id}">
+                    <input type="submit" name="btnSubmit" class="btnContact" value="View Details" />
+                </a>
             </div>
         </div>
     </div>`)
@@ -92,6 +101,12 @@
                         var dom2 = newIssueDom2(data.data.issues.labels[i]);
                         $('#label-'+data.data.issues._id).append(dom2);
                     }
+
+
+                    //remove old values from input
+                    document.getElementById('issueTitle').value="";
+                    document.getElementById('issueAuthor').value="";
+                    document.getElementById('issueDesc').value="";
                     
                     
                     // success notification setting
@@ -121,8 +136,9 @@
         if(document.getElementById("search_by_desc")){
             let search_by_desc = document.getElementById("search_by_desc").value;
         }
-        if(document.getElementById("search_by_author")){
-            let search_by_author = document.getElementById("search_by_author").value;
+        var search_by_author = document.getElementById("search_by_author");
+        if(search_by_author){
+            var search_by_author_value = search_by_author.value;
         }
         
 
@@ -147,7 +163,7 @@
             inputdata = 'inputdata='+search_by_desc+'&project='+project_id;
         }
         else{
-            inputdata = 'author='+search_by_author+'&project='+project_id;
+            inputdata = 'author='+search_by_author_value+'&project='+project_id;
         }
 
 

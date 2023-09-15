@@ -8,12 +8,6 @@ module.exports.listProjects = async function(req, res){
         //fetching project data
         Project.find({})
             .populate('issues')
-            // .populate({
-            //     path: 'comments',
-            //     populate: {
-            //         path: 'user'
-            //     }
-            // })
             .exec(function(err, projects){
                 // console.log(projects);
                 return res.render('list_project.ejs', {
@@ -67,13 +61,34 @@ module.exports.issues_filtering = async function(req, res){
         if(req.body.inputdata){
             let titleIssues = await Issues.find({title: {$regex: req.body.inputdata, $options: "i"},project: req.body.project}); 
             let descriptionIssues = await Issues.find({description: {$regex: req.body.inputdata, $options: "i"},project: req.body.project}); 
-            filteredData = [...titleIssues, ...descriptionIssues];
+            //filteredData = [...titleIssues, ...descriptionIssues];
+            // console.log(titleIssues);
+            // console.log(descriptionIssues);
+            // console.log(filteredData);
+            // Combine the filtered data into one object array and remove duplicates
+            filteredData = [...new Set([...titleIssues, ...descriptionIssues])];
+           // const combinedData = [...new Set([...titleIssues, ...descriptionIssues])];
+            const combinedData = deduplicate([...titleIssues, ...descriptionIssues], '_id');
+            var v = [...titleIssues, ...descriptionIssues];
+
+            const uniqueData = [];
+  
+            // for (const item of v) {
+            //     // Check if an equivalent item is already in uniqueData
+            //     const duplicate = uniqueData.some((uniqueItem) => areEquivalent(item, uniqueItem));
+                
+            //     // If not a duplicate, add it to the uniqueData array
+            //     if (!duplicate) {
+            //     uniqueData.push(item);
+            //     }
+            // }
+            // console.log(uniqueData);
         }
 
 
         // filter with author
         if(req.body.author){
-            filteredData = await Issues.find({author: {$regex: req.body.author, $options: "i"},project: req.body.project}); 
+            filteredData = await Issues.find({author: req.body.author,project: req.body.project}); 
         }
 
 
@@ -117,3 +132,20 @@ module.exports.issues_filtering = async function(req, res){
         return res.redirect('back');
     }
 }
+
+// Function to remove duplicates based on a unique key
+function deduplicate(array, key) {
+    const uniqueKeys = new Set();
+    const result = [];
+  
+    for (const item of array) {
+      const itemKey = item[key];
+  
+      if (!uniqueKeys.has(itemKey)) {
+        uniqueKeys.add(itemKey);
+        result.push(item);
+      }
+    }
+  
+    return result;
+  }
