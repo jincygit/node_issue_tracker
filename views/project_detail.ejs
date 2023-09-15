@@ -1,0 +1,189 @@
+<main id="main">
+
+    <!-- ======= Hero Slider Section ======= -->
+    <section id="hero-slider" class="hero-slider">
+      <div class="container-md" data-aos="fade-in">
+        <div class="row">
+          <div class="col-12">
+            <div class="swiper sliderFeaturedPosts">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <a href="" class="img-bg d-flex align-items-end" style="background-image: url('/images/post-slide-1.jpg');">
+                    <div class="img-bg-inner">
+                      <h2>Create projects</h2>
+                      <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p> -->
+                    </div>
+                  </a>
+                </div>
+
+                
+              </div>
+              <div class="custom-swiper-button-next">
+                <span class="bi-chevron-right"></span>
+              </div>
+              <div class="custom-swiper-button-prev">
+                <span class="bi-chevron-left"></span>
+              </div>
+
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Hero Slider Section -->
+
+
+    <!-- ======= Project Detail Start ======= -->
+    <section>
+      <h3 style="margin-left: 70px; text-align: center;">Project Details</h3>
+      <div class="" style="">
+          <div class="d-flex justify-content-center row">
+              <div class="col-md-10">
+                  <div class="row p-2 bg-white border rounded" style="width: 1118px;margin-left: 2px;">
+                      <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="/images/green1.jpg"></div>
+                      <div class="col-md-6 mt-1">
+                          <h5 style="    font-size: calc(1.3rem + .6vw);"><%= projectData.name %></h5>
+                          <div class="d-flex flex-row">
+                              <div class="ratings mr-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div><span><%= projectData.author %></h5>
+                                <div class="d-flex flex-row"></span>
+                          </div>
+                          <input type="hidden" id="projectId" value="<%= projectData._id %>">
+                          <div class="mt-1 mb-1 spec-1"><span><%= projectData.description %></span></div>
+                          
+                      </div>
+                      
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+    <!-- ======= Project Detail End ======= -->
+
+
+    <!-- ======= Create Issues Start ======= -->
+    <section>
+        <div class="container contact-form">
+            <!-- <div class="contact-image">
+                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
+            </div> -->
+            <form method="POST" action="/issues/create" id="new-issues-form">
+                <h3>Create issues</h3>
+               <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="title" class="form-control" placeholder="Your Title *"  required/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="author" class="form-control" placeholder="Your Author *"  required/>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <p style="margin-top: 10px;
+                            margin-bottom: 7px;">Choose issue Labels(multiple selection possible)</p>
+                            
+                            <input type="hidden" name="project" value="<%= projectData._id %>">
+                            <% for(label of labels){ %>
+                            <label for="success" class="btn btn-success" style="background-color: #c5d7c4;
+                            color: #000000;"><%= label.labelname %> <input type="checkbox" name="labels" value="<%= label.labelname %>" id="success" class="badgebox"></label>
+                            <% } %>
+                            
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="btnSubmit" class="btnContact" value="Create Issue" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <textarea name="description" class="form-control" placeholder="Your Descrition *" style="width: 100%; height: 150px;" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <!-- ======= Create Issues End ======= -->
+
+
+    <!-- ======= List Issues Start ======= -->
+    <section>
+      <!-- Search filter starts -->
+      <div class="">
+        <h2 style="margin-left: 70px; text-align: center;">Issues List </h2>
+          <center>
+            <div class="search">
+              <input  class="search-txt" id="search_by_title" type="text" name="" placeholder="Type to search with title and description">      
+              <button class="search-btn" onclick="filtering('title')">Search</button>
+           </div>
+          </center>
+        </div>
+        <!-- Search filter ends -->
+
+        
+        <!-- Author filter dropdown starts -->
+        <div class="dropdown" >
+          <center>
+            <select class="form-select" style="background-color: #8cc63e;
+            margin: 0px 0px 0px 0px; width: 1118px;" name="search_author" id="search_by_author" onInput="filtering('author')">
+              <option value="">Filter By Author None </option>
+              <% for(singleauthor of issuesAuthors){ %>
+              <option value="<%= singleauthor.author %>"><%= singleauthor.author %></option>
+              <% } %>
+              
+            </select>
+          </center>
+        </div>
+        <!-- Author filter dropdown ends -->
+
+
+          <div class="d-flex justify-content-center row listing">
+              <div class="col-md-10" >
+                <center>
+                  <!-- Labels filter dropdown starts -->
+                  <div class="row p-2 border rounded" style="width: 1118px;color: #000;
+                  background-color: #f1882e;" id="qq">
+                      <p><b>Filter by Labels</b></p>
+                      <% for(label of labels){ %>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1" name="search_by_labels" value="<%= label.labelname %>" onInput="filtering('labels')">
+                        <label class="form-check-label"><%= label.labelname %></label>
+                      </div>
+                      <% } %>      
+                  </div>
+                  <!-- Labels filter dropdown ends -->
+
+                  <!-- list starts -->
+                  <div id="issues-list-container">
+                    <% if(issues){ %>
+                      <% for(issue of issues){ %>
+                      <div class="row p-2 bg-white border rounded" style="width: 1118px;" id="issue-<%= issue._id %>">
+                        <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="/images/bug1.jpg"></div>
+                        <div class="col-md-6 mt-1">
+                            <h5><%= issue.title %></h5>
+                            <p class="text-justify text-truncate para mb-0"><%= issue.author %><br><br></p>
+                            <div class="mt-1 mb-1 spec-1" id="label-<%= issue._id %>">
+                              <% for(label of issue.labels){ %>
+                              <span class="dot"></span><span><%= label %></span>
+                              <% } %>
+                            </div>
+                            <p class="text-justify text-truncate para mb-0"><%= issue.description %><br><br></p>
+                            
+                        </div>
+                        
+                      </div>
+                      <% } %>
+                    <% } else { %>
+                      <div class="row p-2 bg-white border rounded" style="width: 1118px;">
+                          <h2>No issues Available</h2>
+                      </div>
+                    <% } %>
+                  </div>
+                  <!-- list ends -->
+                  
+                </center>
+              </div>
+          </div>
+      </div>
+    </section>
+    <!-- ======= List Issues End ======= -->
+    
+
+  </main><!-- End #main -->
